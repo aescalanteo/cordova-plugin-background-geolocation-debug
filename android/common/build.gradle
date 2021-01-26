@@ -23,6 +23,7 @@ def projDependencies = [
     [configuration: "implementation", dependency: libs.logback],
     [configuration: "implementation", dependency: libs.slf4j],
     [configuration: "implementation", dependency: libs.promise],
+    [configuration: "implementation", dependency: libs.okhttp],
 ]
 
 buildscript {

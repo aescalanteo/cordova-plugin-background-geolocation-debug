@@ -14,8 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.github.jparkie.promise.Promise;
@@ -40,6 +40,15 @@ import com.marianhello.logging.UncaughtExceptionLogger;
 
 import org.json.JSONException;
 import org.slf4j.event.Level;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -67,6 +76,9 @@ public class BackgroundGeolocationFacade {
 
     private org.slf4j.Logger logger;
 
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    OkHttpClient client = new OkHttpClient();
+
     private static String[] getRequiredPermissions() {
         if(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             return new String[]{
@@ -83,7 +95,7 @@ public class BackgroundGeolocationFacade {
         }
     }
 
-    public BackgroundGeolocationFacade(Context context, PluginDelegate delegate) {
+   public BackgroundGeolocationFacade(Context context, PluginDelegate delegate) {
         mContext = context;
         mDelegate = delegate;
         mService = new LocationServiceProxy(context);
@@ -94,6 +106,7 @@ public class BackgroundGeolocationFacade {
         LoggerManager.enableDBLogging();
 
         logger.info("Initializing plugin");
+        post("Initializing plugin");
 
         NotificationHelper.registerAllChannels(getApplicationContext());
     }
@@ -102,6 +115,7 @@ public class BackgroundGeolocationFacade {
         @Override
         public void onReceive(Context context, Intent intent) {
             logger.debug("Authorization has changed");
+            post("Authorization has changed");
             mDelegate.onAuthorizationChanged(getAuthorizationStatus());
         }
     };
@@ -115,6 +129,7 @@ public class BackgroundGeolocationFacade {
             switch (action) {
                 case LocationServiceImpl.MSG_ON_LOCATION: {
                     logger.debug("Received MSG_ON_LOCATION");
+                    post("Received MSG_ON_LOCATION");
                     bundle.setClassLoader(LocationServiceImpl.class.getClassLoader());
                     BackgroundLocation location = (BackgroundLocation) bundle.getParcelable("payload");
                     mDelegate.onLocationChanged(location);
@@ -123,6 +138,7 @@ public class BackgroundGeolocationFacade {
 
                 case LocationServiceImpl.MSG_ON_STATIONARY: {
                     logger.debug("Received MSG_ON_STATIONARY");
+                    post("Received MSG_ON_STATIONARY");
                     bundle.setClassLoader(LocationServiceImpl.class.getClassLoader());
                     BackgroundLocation location = (BackgroundLocation) bundle.getParcelable("payload");
                     mStationaryLocation = location;
@@ -132,6 +148,7 @@ public class BackgroundGeolocationFacade {
 
                 case LocationServiceImpl.MSG_ON_ACTIVITY: {
                     logger.debug("Received MSG_ON_ACTIVITY");
+                    post("Received MSG_ON_STATIONARY");
                     bundle.setClassLoader(LocationServiceImpl.class.getClassLoader());
                     BackgroundActivity activity = (BackgroundActivity) bundle.getParcelable("payload");
                     mDelegate.onActivityChanged(activity);
@@ -143,25 +160,29 @@ public class BackgroundGeolocationFacade {
                     Bundle errorBundle = bundle.getBundle("payload");
                     Integer errorCode = errorBundle.getInt("code");
                     String errorMessage = errorBundle.getString("message");
+                    post("Received MSG_ON_ERROR");
+                    post(errorMessage);
                     mDelegate.onError(new PluginException(errorMessage, errorCode));
                     return;
                 }
 
                 case LocationServiceImpl.MSG_ON_SERVICE_STARTED: {
                     logger.debug("Received MSG_ON_SERVICE_STARTED");
+                    post("Received MSG_ON_SERVICE_STARTED");
                     mDelegate.onServiceStatusChanged(SERVICE_STARTED);
                     return;
                 }
 
                 case LocationServiceImpl.MSG_ON_SERVICE_STOPPED: {
                     logger.debug("Received MSG_ON_SERVICE_STOPPED");
+                    post("Received MSG_ON_SERVICE_STOPPED");
                     mDelegate.onServiceStatusChanged(SERVICE_STOPPED);
                     return;
                 }
 
                 case LocationServiceImpl.MSG_ON_ABORT_REQUESTED: {
                     logger.debug("Received MSG_ON_ABORT_REQUESTED");
-
+                    post("Received MSG_ON_ABORT_REQUESTED");
                     if (mDelegate != null) {
                         // We have a delegate, tell it that there's a request.
                         // It will decide whether to stop or not.
@@ -177,7 +198,7 @@ public class BackgroundGeolocationFacade {
 
                 case LocationServiceImpl.MSG_ON_HTTP_AUTHORIZATION: {
                     logger.debug("Received MSG_ON_HTTP_AUTHORIZATION");
-
+                    post("Received MSG_ON_HTTP_AUTHORIZATION");
                     if (mDelegate != null) {
                         mDelegate.onHttpAuthorization();
                     }
@@ -224,15 +245,40 @@ public class BackgroundGeolocationFacade {
         mServiceBroadcastReceiverRegistered = false;
     }
 
+    public String post(String message) {
+        logger.debug("[PLUGIN_LOG] {}", message);
+        RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + "\"}");
+        Request request = new Request.Builder()
+                .url("https://global.akar.pe/taxi/plugin-log")
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+
+        Response response = null;
+        try {
+            response = call.execute();
+            logger.debug("[PLUGIN_LOG] Response {}", response);
+            return response.body().string();
+        } catch (IOException e) {
+            logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void start() {
         logger.debug("Starting service");
+
+        post("Starting plugin");
 
         PermissionManager permissionManager = PermissionManager.getInstance(getContext());
         permissionManager.checkPermissions(Arrays.asList(PERMISSIONS), new PermissionManager.PermissionRequestListener() {
             @Override
             public void onPermissionGranted() {
                 logger.info("User granted requested permissions");
+
                 // watch location mode changes
+                post("Permission granted");
                 registerLocationModeChangeReceiver();
                 registerServiceBroadcast();
                 startBackgroundService();
@@ -242,6 +288,7 @@ public class BackgroundGeolocationFacade {
             public void onPermissionDenied() {
                 logger.info("User denied requested permissions");
                 if (mDelegate != null) {
+                    post("Permission was denied");
                     mDelegate.onAuthorizationChanged(BackgroundGeolocationFacade.AUTHORIZATION_DENIED);
                 }
             }
@@ -250,6 +297,7 @@ public class BackgroundGeolocationFacade {
 
     public void stop() {
         logger.debug("Stopping service");
+        post("Service stopped");
         unregisterLocationModeChangeReceiver();
         // Note: we cannot unregistered service broadcast here
         // because no stop notification from service will arrive
@@ -282,6 +330,7 @@ public class BackgroundGeolocationFacade {
         } else {
             mService.startHeadlessTask();
         }
+        post("Service destroyed");
     }
 
     public Collection<BackgroundLocation> getLocations() {
@@ -324,19 +373,23 @@ public class BackgroundGeolocationFacade {
 
             Throwable error = promise.getError();
             if (error == null) {
+                post("Location not available");
                 throw new PluginException("Location not available", 2); // LOCATION_UNAVAILABLE
             }
             if (error instanceof LocationManager.PermissionDeniedException) {
                 logger.warn("Getting current location failed due missing permissions");
+                post("Getting current location failed due missing permissions");
                 throw new PluginException("Permission denied", 1); // PERMISSION_DENIED
             }
             if (error instanceof TimeoutException) {
+                post("Location request timed out");
                 throw new PluginException("Location request timed out", 3); // TIME_OUT
             }
 
             throw new PluginException(error.getMessage(), 2); // LOCATION_UNAVAILABLE
         } catch (InterruptedException e) {
             logger.error("Interrupted while waiting location", e);
+            post("Interrupted while waiting location");
             Thread.currentThread().interrupt();
             throw new RuntimeException("Interrupted while waiting location", e);
         }
@@ -449,6 +502,7 @@ public class BackgroundGeolocationFacade {
 
     private void startBackgroundService() {
         logger.info("Attempt to start bg service");
+        post("Attempt to start bg service");
         if (mIsPaused) {
             mService.startForegroundService();
         } else {
@@ -458,6 +512,7 @@ public class BackgroundGeolocationFacade {
 
     private void stopBackgroundService() {
         logger.info("Attempt to stop bg service");
+        post("Attempt to stop bg service");
         mService.stop();
     }
 
