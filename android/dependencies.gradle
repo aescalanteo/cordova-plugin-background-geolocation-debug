@@ -8,4 +8,6 @@ dependencies {
     }
     // promises
     implementation 'com.github.jparkie:promise:1.0.3'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 }
