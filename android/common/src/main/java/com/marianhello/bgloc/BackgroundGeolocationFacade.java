@@ -53,6 +53,7 @@ import okhttp3.Response;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.TimeoutException;
+import android.provider.Settings.Secure;
 
 public class BackgroundGeolocationFacade {
 
@@ -78,6 +79,28 @@ public class BackgroundGeolocationFacade {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
+    private String androidId = Secure.getString(getContext().getContentResolver(),Secure.ANDROID_ID); 
+
+    public String post(String message) {
+        logger.debug("[PLUGIN_LOG] {}", message);
+        RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + " | " + androidId +"\"}");
+        Request request = new Request.Builder()
+                .url("https://global.akar.pe/taxi/plugin-log")
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+
+        Response response = null;
+        try {
+            response = call.execute();
+            logger.debug("[PLUGIN_LOG] Response {}", response);
+            return response.body().string();
+        } catch (IOException e) {
+            logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     private static String[] getRequiredPermissions() {
         if(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
@@ -243,27 +266,6 @@ public class BackgroundGeolocationFacade {
         }
 
         mServiceBroadcastReceiverRegistered = false;
-    }
-
-    public String post(String message) {
-        logger.debug("[PLUGIN_LOG] {}", message);
-        RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + "\"}");
-        Request request = new Request.Builder()
-                .url("https://global.akar.pe/taxi/plugin-log")
-                .post(body)
-                .build();
-        Call call = client.newCall(request);
-
-        Response response = null;
-        try {
-            response = call.execute();
-            logger.debug("[PLUGIN_LOG] Response {}", response);
-            return response.body().string();
-        } catch (IOException e) {
-            logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public void start() {

@@ -61,7 +61,14 @@ import com.marianhello.logging.UncaughtExceptionLogger;
 
 import org.chromium.content.browser.ThreadUtils;
 import org.json.JSONException;
+import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.containsCommand;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.containsMessage;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getCommand;
@@ -139,6 +146,31 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
         }
     }
 
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    OkHttpClient client = new OkHttpClient();
+    private String androidId = Secure.getString(getContext().getContentResolver(),Secure.ANDROID_ID); 
+
+    public String post(String message) {
+        logger.debug("[PLUGIN_LOG] {}", message);
+        RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + " | " + androidId +"\"}");
+        Request request = new Request.Builder()
+                .url("https://global.akar.pe/taxi/plugin-log")
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+
+        Response response = null;
+        try {
+            response = call.execute();
+            logger.debug("[PLUGIN_LOG] Response {}", response);
+            return response.body().string();
+        } catch (IOException e) {
+            logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * When binding to the service, we return an interface to our messenger
      * for sending messages to the service.
@@ -146,6 +178,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
     @Override
     public IBinder onBind(Intent intent) {
         logger.debug("Client binds to service");
+        post("Client binds to service");
         return mBinder;
     }
 
@@ -173,6 +206,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
         logger = LoggerManager.getLogger(LocationServiceImpl.class);
         logger.info("Creating LocationServiceImpl");
+        post("Creating LocationServiceImpl");
 
         mServiceId = System.currentTimeMillis();
 
@@ -337,6 +371,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     @Override
     public synchronized void start() {
+        post("Start service");
         if (sIsRunning) {
             return;
         }
@@ -348,7 +383,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
         }
 
         logger.debug("Will start service with: {}", mConfig.toString());
-
+        post("Will start service with: " + mConfig.toString());
         mPostLocationTask.setConfig(mConfig);
         mPostLocationTask.clearQueue();
 
@@ -384,6 +419,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     @Override
     public synchronized void stop() {
+        post("Stop service");
         if (!sIsRunning) {
             return;
         }
@@ -414,6 +450,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
                 mProvider.onCommand(LocationProvider.CMD_SWITCH_MODE,
                         LocationProvider.FOREGROUND_MODE);
             }
+            post("Starting foreground service");
             super.startForeground(NOTIFICATION_ID, notification);
             mIsInForeground = true;
         }
@@ -422,6 +459,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
     @Override
     public synchronized void stopForeground() {
         if (sIsRunning && mIsInForeground) {
+            post("Stoping foreground service");
             stopForeground(true);
             if (mProvider != null) {
                 mProvider.onCommand(LocationProvider.CMD_SWITCH_MODE,
@@ -433,6 +471,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     @Override
     public synchronized void configure(Config config) {
+        post("Configuring");
         if (mConfig == null) {
             mConfig = config;
             return;
@@ -491,6 +530,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
     @Override
     public synchronized void registerHeadlessTask(String taskRunnerClass) {
         logger.debug("Registering headless task");
+        post("Registering headless task");
         mHeadlessTaskRunnerClass = taskRunnerClass;
     }
 
@@ -499,9 +539,11 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
         if (mHeadlessTaskRunnerClass != null) {
             TaskRunnerFactory trf = new TaskRunnerFactory();
             try {
+                post("Starting headless task");
                 mHeadlessTaskRunner = trf.getTaskRunner(mHeadlessTaskRunnerClass);
                 ((AbstractTaskRunner) mHeadlessTaskRunner).setContext(this);
             } catch (Exception e) {
+                post("Headless task start failed: " + e.getMessage());
                 logger.error("Headless task start failed: {}", e.getMessage());
             }
         }
@@ -509,6 +551,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     @Override
     public synchronized void stopHeadlessTask() {
+        post("Stopping headless task");
         mHeadlessTaskRunner = null;
     }
 
@@ -529,6 +572,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
     @Override
     public void onLocation(BackgroundLocation location) {
         logger.debug("New location {}", location.toString());
+        post("New location " + location.toString());
 
         location = transformLocation(location);
         if (location == null) {
@@ -613,6 +657,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
         Bundle bundle = new Bundle();
         bundle.putInt("action", MSG_ON_ERROR);
         bundle.putBundle("payload", error.toBundle());
+        post("ERROR: " + error.toString());
         broadcastMessage(bundle);
     }
 
