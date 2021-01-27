@@ -73,6 +73,7 @@ import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.contain
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.containsMessage;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getCommand;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getMessage;
+import android.provider.Settings.Secure;
 
 public class LocationServiceImpl extends Service implements ProviderDelegate, LocationService {
 
@@ -148,7 +149,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
-    private String androidId = Secure.getString(getContext().getContentResolver(),Secure.ANDROID_ID); 
+    private String androidId = Secure.getString(getApplicationContext().getContentResolver(),Secure.ANDROID_ID);
 
     public String post(String message) {
         logger.debug("[PLUGIN_LOG] {}", message);
