@@ -53,7 +53,6 @@ import okhttp3.Response;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.TimeoutException;
-import android.provider.Settings.Secure;
 
 public class BackgroundGeolocationFacade {
 
@@ -79,26 +78,26 @@ public class BackgroundGeolocationFacade {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
-    private String androidId = Secure.getString(getContext().getContentResolver(),Secure.ANDROID_ID); 
+    Long timestamp = System.currentTimeMillis();
 
-    public String post(String message) {
-        logger.debug("[PLUGIN_LOG] {}", message);
-        RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + " | " + androidId +"\"}");
-        Request request = new Request.Builder()
-                .url("https://global.akar.pe/taxi/plugin-log")
-                .post(body)
-                .build();
-        Call call = client.newCall(request);
+    public void post(String message) {
+        if(true) {
+            logger.debug("[PLUGIN_LOG] {} | {}", message, timestamp);
+            RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + " | " + timestamp +"\"}");
+            Request request = new Request.Builder()
+                    .url("https://global.akar.pe/taxi/plugin-log")
+                    .post(body)
+                    .build();
+            Call call = client.newCall(request);
 
-        Response response = null;
-        try {
-            response = call.execute();
-            logger.debug("[PLUGIN_LOG] Response {}", response);
-            return response.body().string();
-        } catch (IOException e) {
-            logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            Response response = null;
+            try {
+                response = call.execute();
+                logger.debug("[PLUGIN_LOG] Response {}", response.body().string());
+            } catch (IOException e) {
+                logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -506,8 +505,10 @@ public class BackgroundGeolocationFacade {
         logger.info("Attempt to start bg service");
         post("Attempt to start bg service");
         if (mIsPaused) {
+            post("mIsPaused true");
             mService.startForegroundService();
         } else {
+            post("mIsPaused false");
             mService.start();
         }
     }

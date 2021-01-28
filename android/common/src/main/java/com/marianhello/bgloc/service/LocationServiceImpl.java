@@ -29,8 +29,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.marianhello.bgloc.Config;
 import com.marianhello.bgloc.ConnectivityListener;
@@ -73,7 +73,6 @@ import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.contain
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.containsMessage;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getCommand;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getMessage;
-import android.provider.Settings.Secure;
 
 public class LocationServiceImpl extends Service implements ProviderDelegate, LocationService {
 
@@ -149,26 +148,26 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
-    private String androidId = Secure.getString(getApplicationContext().getContentResolver(),Secure.ANDROID_ID);
+    Long timestamp = System.currentTimeMillis();
 
-    public String post(String message) {
-        logger.debug("[PLUGIN_LOG] {}", message);
-        RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + " | " + androidId +"\"}");
-        Request request = new Request.Builder()
-                .url("https://global.akar.pe/taxi/plugin-log")
-                .post(body)
-                .build();
-        Call call = client.newCall(request);
+    public void post(String message) {
+        if(true) {
+            logger.debug("[PLUGIN_LOG] {} | {}", message, timestamp);
+            RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + " | " + timestamp +"\"}");
+            Request request = new Request.Builder()
+                    .url("https://global.akar.pe/taxi/plugin-log")
+                    .post(body)
+                    .build();
+            Call call = client.newCall(request);
 
-        Response response = null;
-        try {
-            response = call.execute();
-            logger.debug("[PLUGIN_LOG] Response {}", response);
-            return response.body().string();
-        } catch (IOException e) {
-            logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            Response response = null;
+            try {
+                response = call.execute();
+                logger.debug("[PLUGIN_LOG] Response {}", response.body().string());
+            } catch (IOException e) {
+                logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -207,7 +206,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
         logger = LoggerManager.getLogger(LocationServiceImpl.class);
         logger.info("Creating LocationServiceImpl");
-        post("Creating LocationServiceImpl");
+        //post("Creating LocationServiceImpl");
 
         mServiceId = System.currentTimeMillis();
 
@@ -438,6 +437,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     @Override
     public void startForeground() {
+        post("Starting foreground service");
         if (sIsRunning && !mIsInForeground) {
             Config config = getConfig();
             Notification notification = new NotificationHelper.NotificationFactory(this).getNotification(
@@ -451,7 +451,7 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
                 mProvider.onCommand(LocationProvider.CMD_SWITCH_MODE,
                         LocationProvider.FOREGROUND_MODE);
             }
-            post("Starting foreground service");
+
             super.startForeground(NOTIFICATION_ID, notification);
             mIsInForeground = true;
         }
