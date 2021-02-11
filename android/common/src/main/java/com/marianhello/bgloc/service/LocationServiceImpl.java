@@ -34,6 +34,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.marianhello.bgloc.Config;
 import com.marianhello.bgloc.ConnectivityListener;
+import com.marianhello.bgloc.debug.DebugMessage;
+import com.marianhello.bgloc.debug.DebugTaskRunner;
+import com.marianhello.bgloc.debug.NetworkTask;
 import com.marianhello.bgloc.sync.NotificationHelper;
 import com.marianhello.bgloc.PluginException;
 import com.marianhello.bgloc.PostLocationTask;
@@ -61,14 +64,7 @@ import com.marianhello.logging.UncaughtExceptionLogger;
 
 import org.chromium.content.browser.ThreadUtils;
 import org.json.JSONException;
-import java.io.IOException;
 
-import okhttp3.Call;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.containsCommand;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.containsMessage;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getCommand;
@@ -146,29 +142,13 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
         }
     }
 
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    OkHttpClient client = new OkHttpClient();
-    Long timestamp = System.currentTimeMillis();
-
     public void post(String message) {
-        if(true) {
-            logger.debug("[PLUGIN_LOG] {} | {}", message, timestamp);
-            RequestBody body = RequestBody.create(JSON, "{\"mensaje\":\"" + message + " | " + timestamp +"\"}");
-            Request request = new Request.Builder()
-                    .url("https://global.akar.pe/taxi/plugin-log")
-                    .post(body)
-                    .build();
-            Call call = client.newCall(request);
+        logger.debug("[PLUGIN_LOG] Posting");
 
-            Response response = null;
-            try {
-                response = call.execute();
-                logger.debug("[PLUGIN_LOG] Response {}", response.body().string());
-            } catch (IOException e) {
-                logger.debug("[PLUGIN_LOG] Ocurrió un error: {}", e.getMessage());
-                e.printStackTrace();
-            }
-        }
+        DebugTaskRunner runner = new DebugTaskRunner();
+        DebugMessage dm = new DebugMessage();
+        dm.setMessage(message);
+        runner.executeAsync(new NetworkTask(dm));
     }
 
     /**
