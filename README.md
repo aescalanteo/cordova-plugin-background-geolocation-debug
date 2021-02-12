@@ -1,8 +1,8 @@
-# @mauron85/cordova-plugin-background-geolocation
+# @aescalanteo/cordova-plugin-background-geolocation
 
 ## We're moving
 
-Npm package is now [@mauron85/cordova-plugin-background-geolocation](https://www.npmjs.com/package/@mauron85/cordova-plugin-background-geolocation)!
+Npm package is now [@aescalanteo/cordova-plugin-background-geolocation](https://www.npmjs.com/package/@aescalanteo/cordova-plugin-background-geolocation)!
 
 ## Submitting issues
 
@@ -39,7 +39,7 @@ See [Which provider should I use?](/PROVIDERS.md) for more information about pro
 
 ## Example Application
 
-Checkout repository [cordova-plugin-background-geolocation-example](https://github.com/mauron85/cordova-plugin-background-geolocation-example).
+Checkout repository [cordova-plugin-background-geolocation-example](https://github.com/aescalanteo/cordova-plugin-background-geolocation-example).
 
 ## Migrations
 
@@ -48,7 +48,7 @@ See [MIGRATIONS.md](/MIGRATIONS.md)
 ## Installing the plugin
 
 ```
-cordova plugin add @mauron85/cordova-plugin-background-geolocation
+cordova plugin add @aescalanteo/cordova-plugin-background-geolocation
 ```
 
 You may also want to change default iOS permission prompts and set specific google play version and android support library version for compatibility with other plugins.
@@ -56,7 +56,7 @@ You may also want to change default iOS permission prompts and set specific goog
 **Note:** Always consult documentation of other plugins to figure out compatible versions.
 
 ```
-cordova plugin add @mauron85/cordova-plugin-background-geolocation \
+cordova plugin add @aescalanteo/cordova-plugin-background-geolocation \
   --variable GOOGLE_PLAY_SERVICES_VERSION=11+ \
   --variable ANDROID_SUPPORT_LIBRARY_VERSION=23+ \
   --variable ALWAYS_USAGE_DESCRIPTION="App requires ..." \
@@ -66,7 +66,7 @@ cordova plugin add @mauron85/cordova-plugin-background-geolocation \
 Or in `config.xml`:
 
 ```
-<plugin name="cordova-plugin-background-geolocation" spec="@mauron85/cordova-plugin-background-geolocation@~3.1.0">
+<plugin name="cordova-plugin-background-geolocation" spec="@aescalanteo/cordova-plugin-background-geolocation@~3.1.0">
   <variable name="GOOGLE_PLAY_SERVICES_VERSION" value="11+" />
   <variable name="ANDROID_SUPPORT_LIBRARY_VERSION" value="26+" />
   <variable name="ICON" value="@mipmap/icon" />
@@ -85,7 +85,7 @@ This plugin should work with Adobe® PhoneGap™ Build without any modification.
 To register plugin add following line into your `config.xml`:
 
 ```
-<plugin name="@mauron85/cordova-plugin-background-geolocation"/>
+<plugin name="@aescalanteo/cordova-plugin-background-geolocation"/>
 ```
 
 **Note:** If you're using *hydration*, you have to download and reinstall your app with every new version of the plugin, as plugins are not updated.
@@ -463,7 +463,7 @@ Return all logged events. Useful for plugin debugging.
 | `minLevel` | `String`      | return log entries above level. Available levels: ["TRACE", "DEBUG", "INFO", "WARN", "ERROR]      |
 | `success`  | `Function`    | callback function which will be called with log entries                                           |
 
-*[Example of infinite log scrolling](https://github.com/mauron85/react-native-background-geolocation-example/blob/master/src/scenes/Logs.js)
+*[Example of infinite log scrolling](https://github.com/aescalanteo/react-native-background-geolocation-example/blob/master/src/scenes/Logs.js)
 
 Format of log entry:
 
@@ -621,7 +621,7 @@ BackgroundGeolocation.headlessTask(function(event) {
 
 ### Example of backend server
 
-[Background-geolocation-server](https://github.com/mauron85/background-geolocation-server) is a backend server written in nodejs
+[Background-geolocation-server](https://github.com/aescalanteo/background-geolocation-server) is a backend server written in nodejs
 with CORS - Cross-Origin Resource Sharing support.
 There are instructions how to run it and simulate locations on Android, iOS Simulator and Genymotion.
 
@@ -640,7 +640,7 @@ Plugin cannot detect the exact moment the device moves out of the stationary-rad
 
 ### Android
 
-On Android devices it is recommended to have a notification in the drawer (option `startForeground:true`). This gives plugin location service higher priority, decreasing probability of OS killing it. Check [wiki](https://github.com/mauron85/cordova-plugin-background-geolocation/wiki/Android-implementation) for explanation.
+On Android devices it is recommended to have a notification in the drawer (option `startForeground:true`). This gives plugin location service higher priority, decreasing probability of OS killing it. Check [wiki](https://github.com/aescalanteo/cordova-plugin-background-geolocation/wiki/Android-implementation) for explanation.
 
 #### Custom ROMs
 
@@ -683,7 +683,7 @@ Android 6.0 "Marshmallow" introduced a new permissions model where the user can 
 
 **Note:** Only available for API Level >=21.
 
-To use custom notification icons, you need to put icons into *res/drawable* directory **of your app**. You can automate the process  as part of **after_platform_add** hook configured via [config.xml](https://github.com/mauron85/cordova-plugin-background-geolocation-example/blob/master/config.xml). Check [config.xml](https://github.com/mauron85/cordova-plugin-background-geolocation-example/blob/master/config.xml) and [scripts/res_android.js](https://github.com/mauron85/cordova-plugin-background-geolocation-example/blob/master/scripts/res_android.js) of example app for reference.
+To use custom notification icons, you need to put icons into *res/drawable* directory **of your app**. You can automate the process  as part of **after_platform_add** hook configured via [config.xml](https://github.com/aescalanteo/cordova-plugin-background-geolocation-example/blob/master/config.xml). Check [config.xml](https://github.com/aescalanteo/cordova-plugin-background-geolocation-example/blob/master/config.xml) and [scripts/res_android.js](https://github.com/aescalanteo/cordova-plugin-background-geolocation-example/blob/master/scripts/res_android.js) of example app for reference.
 
 If you only want a single large icon, set `notificationIconLarge` to null and include your icon's filename in the `notificationIconSmall` parameter.
 

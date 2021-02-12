@@ -7,7 +7,7 @@ import android.content.Context;
  */
 public class ResourceResolver {
 
-    private static final String RESOURCE_PREFIX = "mauron85_bgloc_";
+    private static final String RESOURCE_PREFIX = "aescalanteo_bgloc_";
     private static final String ACCOUNT_NAME_RESOURCE = RESOURCE_PREFIX + "account_name";
     private static final String ACCOUNT_TYPE_RESOURCE = RESOURCE_PREFIX + "account_type";
     private static final String AUTHORITY_TYPE_RESOURCE = RESOURCE_PREFIX + "content_authority";

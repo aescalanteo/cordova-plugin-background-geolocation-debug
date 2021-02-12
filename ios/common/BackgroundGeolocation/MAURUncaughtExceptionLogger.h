@@ -3,7 +3,7 @@
 //  BackgroundGeolocation
 //
 //  Created by Marian Hello on 11/04/2018.
-//  Copyright © 2018 mauron85. All rights reserved.
+//  Copyright © 2018 aescalanteo. All rights reserved.
 //
 
 #ifndef MAURUncaughtExceptionLogger_h

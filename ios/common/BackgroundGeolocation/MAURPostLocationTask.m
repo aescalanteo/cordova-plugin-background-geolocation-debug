@@ -3,7 +3,7 @@
 //  BackgroundGeolocation
 //
 //  Created by Marian Hello on 27/04/2018.
-//  Copyright © 2018 mauron85. All rights reserved.
+//  Copyright © 2018 aescalanteo. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

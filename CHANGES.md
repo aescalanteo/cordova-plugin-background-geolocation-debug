@@ -78,13 +78,13 @@ Since alpha.30:
 
 Since alpha.41:
 - notificationsEnabled config option (by [@danielgindi](https://github.com/danielgindi/))
-More info: https://github.com/mauron85/react-native-background-geolocation/pull/269
+More info: https://github.com/aescalanteo/react-native-background-geolocation/pull/269
 - Allow stopping location updates on status "285 Updates Not Required" (by [@danielgindi](https://github.com/danielgindi/))
-More info: https://github.com/mauron85/react-native-background-geolocation/pull/271
+More info: https://github.com/aescalanteo/react-native-background-geolocation/pull/271
 
 Since alpha.45:
 - Listen for 401 Unauthorized status codes received from http server (by [@FeNoMeNa](https://github.com/FeNoMeNa/))
-More info: https://github.com/mauron85/react-native-background-geolocation/pull/308/files
+More info: https://github.com/aescalanteo/react-native-background-geolocation/pull/308/files
 
 Since alpha.46:
 - typescript definitions
@@ -119,7 +119,7 @@ Since alpha.25:
 
 Since alpha.28:
 - Android remove wake locks
-https://github.com/mauron85/background-geolocation-android/pull/4 by @grassick
+https://github.com/aescalanteo/background-geolocation-android/pull/4 by @grassick
 
 Since alpha.29:
 - Android show service notification only when in background
@@ -143,7 +143,7 @@ Since alpha.33:
 
 Since alpha.40:
 - Android disable notification sound and vibration on oreo
-(PR: [#9](https://github.com/mauron85/background-geolocation-android/pull/9)
+(PR: [#9](https://github.com/aescalanteo/background-geolocation-android/pull/9)
 by [@danielgindi](https://github.com/danielgindi/))
 
 Since alpha.48:
@@ -192,26 +192,26 @@ Since alpha.35:
 - Android fix issue #431 - "dependencies.gradle" not found
 
 Since alpha.38:
-- iOS Fix crash on delete all location ([7392e39](https://github.com/mauron85/background-geolocation-ios/commit/7392e391c3de3ff0d6f5ef2ef19c34aba612bf9b) by [@acerbetti](https://github.com/acerbetti/))
+- iOS Fix crash on delete all location ([7392e39](https://github.com/aescalanteo/background-geolocation-ios/commit/7392e391c3de3ff0d6f5ef2ef19c34aba612bf9b) by [@acerbetti](https://github.com/acerbetti/))
 
 Since alpha.39:
 - Android Defer start and configure until service is ready
-(PR: [#7](https://github.com/mauron85/background-geolocation-android/pull/7)
-Commit: [00e1314](https://github.com/mauron85/background-geolocation-android/commit/00e131478ad4e37576eb85581bb663b65302a4e0) by [@danielgindi](https://github.com/danielgindi/),
+(PR: [#7](https://github.com/aescalanteo/background-geolocation-android/pull/7)
+Commit: [00e1314](https://github.com/aescalanteo/background-geolocation-android/commit/00e131478ad4e37576eb85581bb663b65302a4e0) by [@danielgindi](https://github.com/danielgindi/),
 fixes #201, #181, #172)
 
 Since alpha.40:
 - iOS Avoid taking control of UNUserNotificationCenter
-(PR: [#268](https://github.com/mauron85/react-native-background-geolocation/pull/268))
+(PR: [#268](https://github.com/aescalanteo/react-native-background-geolocation/pull/268))
 
 Since alpha.42:
 - Android fix locationService treating success as errors
-(PR: [#13](https://github.com/mauron85/background-geolocation-android/pull/13)
+(PR: [#13](https://github.com/aescalanteo/background-geolocation-android/pull/13)
 by [@hoisel](https://github.com/hoisel/))
 
 Since alpha.43:
 - Android make sure mService exists when we call start or stop
-(PR: [#17](https://github.com/mauron85/background-geolocation-android/pull/17)
+(PR: [#17](https://github.com/aescalanteo/background-geolocation-android/pull/17)
 by [@ivosabev](https://github.com/ivosabev/))
 
 Since alpha.46:

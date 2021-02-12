@@ -2,7 +2,7 @@
 //  MAURBackgroundSync.m
 //
 //  Created by Marian Hello on 07/07/16.
-//  Copyright © 2016 mauron85. All rights reserved.
+//  Copyright © 2016 aescalanteo. All rights reserved.
 //
 
 #import "UIKit/UIKit.h"

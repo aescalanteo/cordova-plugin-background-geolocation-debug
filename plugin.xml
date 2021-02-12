@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-background-geolocation"
+        id="cordova-plugin-background-geolocation-debug"
         version="3.1.0">
     <name>CDVBackgroundGeolocation</name>
     <description>Cordova Background Geolocation Plugin</description>
@@ -151,7 +151,7 @@
             </service>
             <provider
                 android:name="com.marianhello.bgloc.data.provider.LocationContentProvider"
-                android:authorities="@string/mauron85_bgloc_content_authority"
+                android:authorities="@string/aescalanteo_bgloc_content_authority"
                 android:exported="false"
                 android:syncable="true"/>
             <!-- <service
@@ -200,15 +200,15 @@
         </config-file>
 
         <config-file target="res/values/strings.xml" parent="/resources">
-            <string name="mauron85_bgloc_account_name">$ACCOUNT_NAME</string>
-            <string name="mauron85_bgloc_account_type">$ACCOUNT_TYPE</string>
-            <string name="mauron85_bgloc_content_authority">$CONTENT_AUTHORITY</string>
+            <string name="aescalanteo_bgloc_account_name">$ACCOUNT_NAME</string>
+            <string name="aescalanteo_bgloc_account_type">$ACCOUNT_TYPE</string>
+            <string name="aescalanteo_bgloc_content_authority">$CONTENT_AUTHORITY</string>
         </config-file>
 
         <edit-config file="res/xml/authenticator.xml" target="/*" mode="overwrite">
           <account-authenticator
               xmlns:android="http://schemas.android.com/apk/res/android"
-              android:accountType="@string/mauron85_bgloc_account_type"
+              android:accountType="@string/aescalanteo_bgloc_account_type"
               android:icon="$ICON"
               android:smallIcon="$SMALL_ICON"
               android:label="$ACCOUNT_LABEL"/>
@@ -217,8 +217,8 @@
         <edit-config file="res/xml/syncadapter.xml" target="/*" mode="overwrite">
           <sync-adapter
               xmlns:android="http://schemas.android.com/apk/res/android"
-              android:contentAuthority="@string/mauron85_bgloc_content_authority"
-              android:accountType="@string/mauron85_bgloc_account_type"
+              android:contentAuthority="@string/aescalanteo_bgloc_content_authority"
+              android:accountType="@string/aescalanteo_bgloc_account_type"
               android:userVisible="false"
               android:supportsUploading="true"
               android:allowParallelSyncs="false"

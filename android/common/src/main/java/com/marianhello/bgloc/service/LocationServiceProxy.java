@@ -19,9 +19,9 @@ public class LocationServiceProxy implements LocationService, LocationServiceInf
     public void configure(Config config) {
         // do not start service if it was not already started
         // FIXES:
-        // https://github.com/mauron85/react-native-background-geolocation/issues/360
-        // https://github.com/mauron85/cordova-plugin-background-geolocation/issues/551
-        // https://github.com/mauron85/cordova-plugin-background-geolocation/issues/552
+        // https://github.com/aescalanteo/react-native-background-geolocation/issues/360
+        // https://github.com/aescalanteo/cordova-plugin-background-geolocation/issues/551
+        // https://github.com/aescalanteo/cordova-plugin-background-geolocation/issues/552
         if (!isStarted()) { return; }
 
         Intent intent = mIntentBuilder

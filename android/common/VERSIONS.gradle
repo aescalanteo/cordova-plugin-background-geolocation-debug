@@ -16,7 +16,7 @@ def JUNIT_VERSION = "4.12"
 def FEST_ASSERT_CORE_VERSION = "2.0M10"
 def SUPPORT_TEST_VERSION = "1.0.2"
 def SUPPORTX_TEST_VERSION = "1.1.0"
-def RESOURCE_PREFIX = "mauron85_bgloc_"
+def RESOURCE_PREFIX = "aescalanteo_bgloc_"
 
 ext {
     getApplicationId = { ->
@@ -37,7 +37,7 @@ ext {
             return rootProject.accountPrefix;
         }
         def applicationId = getApplicationId();
-        return applicationId + '.mauron85.bgloc';
+        return applicationId + '.aescalanteo.bgloc';
     }
 
     getReactNativeLibVersion = { ->

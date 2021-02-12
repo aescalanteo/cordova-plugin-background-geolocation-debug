@@ -329,7 +329,7 @@ FMDBLogger *sqliteLogger;
 - (void) showLocationSettings
 {
     // NOOP - Since Apple started rejecting apps using non public url schemes
-    // https://github.com/mauron85/cordova-plugin-background-geolocation/issues/394
+    // https://github.com/aescalanteo/cordova-plugin-background-geolocation/issues/394
 }
 
 - (MAURLocation*) getStationaryLocation
