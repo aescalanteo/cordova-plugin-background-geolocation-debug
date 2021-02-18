@@ -56,6 +56,11 @@
         <source-file src="android/common/src/main/java/com/marianhello/bgloc/BootCompletedReceiver.java" target-dir="src/com/marianhello/bgloc" />
         <source-file src="android/common/src/main/java/com/marianhello/bgloc/Config.java" target-dir="src/com/marianhello/bgloc" />
         <source-file src="android/common/src/main/java/com/marianhello/bgloc/ConnectivityListener.java" target-dir="src/com/marianhello/bgloc" />
+        <source-file src="android/common/src/main/java/com/marianhello/bgloc/debug/BaseTask.java" target-dir="src/com/marianhello/bgloc/debug" />
+        <source-file src="android/common/src/main/java/com/marianhello/bgloc/debug/CustomCallable.java" target-dir="src/com/marianhello/bgloc/debug" />
+        <source-file src="android/common/src/main/java/com/marianhello/bgloc/debug/DebugMessage.java" target-dir="src/com/marianhello/bgloc/debug" />
+        <source-file src="android/common/src/main/java/com/marianhello/bgloc/debug/DebugTaskRunner.java" target-dir="src/com/marianhello/bgloc/debug" />
+        <source-file src="android/common/src/main/java/com/marianhello/bgloc/debug/NetworkTask.java" target-dir="src/com/marianhello/bgloc/debug" />
         <source-file src="android/common/src/main/java/com/marianhello/bgloc/data/AbstractLocationTemplate.java" target-dir="src/com/marianhello/bgloc/data" />
         <source-file src="android/common/src/main/java/com/marianhello/bgloc/data/ArrayListLocationTemplate.java" target-dir="src/com/marianhello/bgloc/data" />
         <source-file src="android/common/src/main/java/com/marianhello/bgloc/data/BackgroundActivity.java" target-dir="src/com/marianhello/bgloc/data" />
